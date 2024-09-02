@@ -2,6 +2,8 @@
 
 #include "../../utils/Storage.h"
 #include "../../utils/Shape.h"
+#include "../Exp.h"
+#include "../impl/TensorImpl.h"
 
 #include <cmath>
 #include <assert.h>
@@ -146,7 +148,131 @@ namespace keith {
             }
         };
 
+
+
+
+
+        struct Neg {
+            template<typename LhsType>
+            static data_t eval(Array<index_t>& idx, std::shared_ptr<LhsType> lhs) {
+                return -lhs->eval(idx);
+            }
+            template<typename LhsType, typename RhsType>
+            static const Shape& size(const std::shared_ptr<LhsType>& lhs, const std::shared_ptr<RhsType>& rhs) {
+                return lhs->size();
+            }
+        };
+        struct Sin {
+            template<typename LhsType>
+            static data_t eval(Array<index_t>& idx, std::shared_ptr<LhsType> lhs) {
+                return std::sin(lhs->eval(idx));
+            }
+            template<typename LhsType, typename RhsType>
+            static const Shape& size(const std::shared_ptr<LhsType>& lhs, const std::shared_ptr<RhsType>& rhs) {
+                return lhs->size();
+            }
+        };
+        struct Cos {
+            template<typename LhsType>
+            static data_t eval(Array<index_t>& idx, std::shared_ptr<LhsType> lhs) {
+                return std::cos(lhs->eval(idx));
+            }
+            template<typename LhsType, typename RhsType>
+            static const Shape& size(const std::shared_ptr<LhsType>& lhs, const std::shared_ptr<RhsType>& rhs) {
+                return lhs->size();
+            }
+        };
+        struct Tan {
+            template<typename LhsType>
+            static data_t eval(Array<index_t>& idx, std::shared_ptr<LhsType> lhs) {
+                return std::tan(lhs->eval(idx));
+            }
+            template<typename LhsType, typename RhsType>
+            static const Shape& size(const std::shared_ptr<LhsType>& lhs, const std::shared_ptr<RhsType>& rhs) {
+                return lhs->size();
+            }
+        };
 	}
+
+
+
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::Add, LhsType, RhsType>> operator+(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::Add, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::Add, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::Sub, LhsType, RhsType>> operator-(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::Sub, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::Sub, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::Mul, LhsType, RhsType>> operator*(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::Mul, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::Mul, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::Mul, TensorImpl, RhsType>> operator*(data_t lhs_value, const Exp<RhsType>& rhs) {
+        auto lhs = Exp<TensorImpl>(std::make_shared<TensorImpl>(Storage(1, lhs_value), Shape({ 1 })));
+        return Exp<BinaryExp<op::Mul, TensorImpl, RhsType>>(
+            std::make_shared<BinaryExp<op::Mul, TensorImpl, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::Div, LhsType, RhsType>> operator/(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::Div, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::Div, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::MatrixMul_2dim, LhsType, RhsType>> mm(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::MatrixMul_2dim, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::MatrixMul_2dim, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::MatrixMul_3dim, LhsType, RhsType>> bmm(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::MatrixMul_3dim, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::MatrixMul_3dim, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType, typename RhsType>
+    [[nodiscard]] inline Exp<BinaryExp<op::MatrixMul, LhsType, RhsType>> matmul(const Exp<LhsType>& lhs, const Exp<RhsType>& rhs) {
+        return Exp<BinaryExp<op::MatrixMul, LhsType, RhsType>>(
+            std::make_shared<BinaryExp<op::MatrixMul, LhsType, RhsType>>(lhs.ptr(), rhs.ptr())
+        );
+    }
+
+    template<typename LhsType>
+    [[nodiscard]] inline UnaryExp<op::Neg, LhsType> operator-(const Exp<LhsType>& lhs) {
+        return UnaryExp<op::Neg, LhsType>(lhs.ptr());
+    }
+
+    template<typename LhsType>
+    [[nodiscard]] inline UnaryExp<op::Sin, LhsType> sin(const Exp<LhsType>& lhs) {
+        return UnaryExp<op::Sin, LhsType>(lhs.ptr());
+    }
+
+    template<typename LhsType>
+    [[nodiscard]] inline UnaryExp<op::Cos, LhsType> cos(const Exp<LhsType>& lhs) {
+        return UnaryExp<op::Cos, LhsType>(lhs.ptr());
+    }
+
+    template<typename LhsType>
+    [[nodiscard]] inline UnaryExp<op::Tan, LhsType> tan(const Exp<LhsType>& lhs) {
+        return UnaryExp<op::Tan, LhsType>(lhs.ptr());
+    }
 
 }
 
