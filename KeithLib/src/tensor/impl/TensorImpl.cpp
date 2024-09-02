@@ -52,4 +52,60 @@ namespace keith {
         if (_stride[n_dim() - 1] != 1) return false;
         return true;
     }
+
+    data_t& TensorImpl::operator[](std::initializer_list<index_t> dims) {
+        CHECK_EQUAL(n_dim(), dims.size(),
+            "Invalid %zuD indices for %dD tensor", dims.size(), n_dim());
+        index_t index = 0, dim = 0;
+        for (auto v : dims) {
+            CHECK_IN_RANGE(v, 0, size(dim),
+                "Index out of range (expected to be in range of [0, %d), but got %d)",
+                size(dim), v);
+            index += v * _stride[dim];
+            ++dim;
+        }
+        return _storage[index];
+    }
+    data_t TensorImpl::operator[](std::initializer_list<index_t> dims) const {
+        CHECK_EQUAL(n_dim(), dims.size(),
+            "Invalid %zuD indices for %dD tensor", dims.size(), n_dim());
+        index_t index = 0, dim = 0;
+        for (auto v : dims) {
+            std::cout << v << " ";
+            CHECK_IN_RANGE(v, 0, size(dim),
+                "Index out of range (expected to be in range of [0, %d), but got %d)",
+                size(dim), v);
+            index += v * _stride[dim];
+            ++dim;
+        }
+        std::cout << std::endl;
+        return _storage[index];
+    }
+
+    data_t TensorImpl::item() const {
+        CHECK_TRUE(n_dim() == 1 && size(0) == 1,
+            "Only one element tensors can be converted to scalars");
+        return _storage[0];
+    }
+
+    data_t TensorImpl::item(index_t idx) const {
+        return _storage[idx];
+    }
+
+    data_t& TensorImpl::item(index_t idx)
+    {
+        return _storage[idx];
+    }
+    data_t TensorImpl::eval(Array<index_t> idx) const {
+        int index = 0;
+        if (idx.size() >= _shape.n_dim()) {
+            for (int i = idx.size() - n_dim(); i < idx.size(); ++i)
+                index += idx[i] * _stride[i - (idx.size() - n_dim())];
+        }
+        else {
+            for (int i = 0; i < idx.size(); ++i)
+                index += idx[i] * _stride[i + (n_dim() - idx.size())];
+        }
+        return item(index);
+    }
 }
