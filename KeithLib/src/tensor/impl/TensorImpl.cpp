@@ -41,4 +41,15 @@ namespace keith {
     TensorImpl::TensorImpl(Storage&& storage, Shape&& shape, Array<index_t>&& stride) :
         _storage(std::move(storage)), _shape(std::move(shape)), _stride(std::move(stride)) {}
 
+
+
+    bool TensorImpl::is_contiguous() const
+    {
+        for (int i = 0; i < n_dim() - 1; ++i) {
+            if (_shape[i] == 1) continue;
+            if (_stride[i] != _shape.sub_size(i + 1)) return false;
+        }
+        if (_stride[n_dim() - 1] != 1) return false;
+        return true;
+    }
 }
