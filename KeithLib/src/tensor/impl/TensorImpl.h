@@ -3,8 +3,8 @@
 #include "../../utils/Shape.h"
 #include "../../utils/Storage.h"
 #include "../../utils/Allocator.h"
-#include "../../utils/Exception.h"
-#include "../../utils/Exp.h"
+#include "../Exception.h"
+#include "../Exp.h"
 
 #include <initializer_list>
 
@@ -34,7 +34,7 @@ namespace keith {
         }
         [[nodiscard]] const Shape& size() const { return _shape; }
         [[nodiscard]] index_t offset() const { return _storage.offset(); }
-        [[nodiscard]] const IndexArray& stride() const { return _stride; }
+        [[nodiscard]] const Array<index_t>& stride() const { return _stride; }
 
         bool is_contiguous() const;
     public:
@@ -43,7 +43,7 @@ namespace keith {
         [[nodiscard]] data_t item() const;
         [[nodiscard]] data_t item(index_t idx) const;
         [[nodiscard]] data_t& item(index_t idx);
-        [[nodiscard]] data_t eval(IndexArray idx) const;
+        [[nodiscard]] data_t eval(Array<index_t> idx) const;
         [[nodiscard]] data_t sum() const;
     public:
         [[nodiscard]] Alloc::NonTrivalUniquePtr<TensorImpl> slice(index_t idx, index_t dim = 0) const;
@@ -82,7 +82,7 @@ namespace keith {
     protected:
         Storage _storage;
         Shape _shape;
-        IndexArray _stride;
+        Array<index_t> _stride;
 	};
 
     struct TensorMaker {

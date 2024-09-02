@@ -21,8 +21,8 @@ namespace keith {
 
 #define ERROR_LOCATION __FILE__, __func__, __LINE__
 #define THROW_ERROR(format, ...)	do {	\
-    std::sprintf(::st::err::Error::msg_, (format), ##__VA_ARGS__);    \
-    throw ::st::err::Error(ERROR_LOCATION);                           \
+    std::sprintf(::keith::error::Error::msg_, (format), ##__VA_ARGS__);    \
+    throw ::keith::error::Error(ERROR_LOCATION);                           \
 	} while(0)
 #ifndef CANCEL_CHECK
 #define CHECK_TRUE(expr, format, ...) \

@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\tensor\operations\Operations.h" />
     <ClInclude Include="src\tensor\Exp.h" />
     <ClInclude Include="src\tensor\Exception.h" />
     <ClInclude Include="src\utils\Allocator.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="src\utils\Storage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\tensor\operations\Operations.cpp" />
     <ClCompile Include="src\tensor\Exp.cpp" />
     <ClCompile Include="src\tensor\Exception.cpp" />
     <ClCompile Include="src\utils\Allocator.cpp" />

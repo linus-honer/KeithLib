@@ -36,6 +36,9 @@
     <ClInclude Include="src\tensor\Exp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\tensor\operations\Operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\tensor\Tensor.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tensor\Exp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tensor\operations\Operations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
